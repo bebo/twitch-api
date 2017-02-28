@@ -4,15 +4,15 @@ const baseUrl = 'https://api.twitch.tv/kraken';
 const authorizePath = '/oauth2/authorize';
 const accessTokenPath = '/oauth2/token';
 
-class Twitch{
-  constructor({clientId, clientSecret, redirectUri, scopes = []}){
+class Twitch {
+  constructor({clientId, clientSecret, redirectUri, scopes = []}) {
     this.clientId = clientId;
     this.clientSecret = clientSecret;
     this.redirectUri = redirectUri;
     this.scopes = scopes;
   }
 
-  static createRequest({method = 'GET', path = '', accessToken, body = {}}, params) {
+  createRequest({method = 'GET', path = '', accessToken, body = {}}, params) {
     return {
       method,
       body,
@@ -27,23 +27,16 @@ class Twitch{
     };
   }
 
-  static executeRequest(options, params) {
+  executeRequest(options, params) {
     const req = this.createRequest(options, params);
     return request(req)
   }
 
-  static getAuthorizationUrl() {
-    let scopesParam = '';
-    for (let i = 0; i < this.scopes.length;  i++){
-      scopesParam += this.scopes[i];
-      if (i !== (this.scopes.length - 1)){
-        scopesParam += '+';
-      }
-    }
-    return `${baseUrl}${authorizePath}?response_type=code&client_id=${this.clientId}&redirect_uri=${this.redirectUri}&scope=${scopesParam}`;
+  getAuthorizationUrl() {
+    return `${baseUrl}${authorizePath}?response_type=code&client_id=${this.clientId}&redirect_uri=${this.redirectUri}&scope=${this.scopes.join('+')}`;
   }
 
-  static getAccessToken = function(code) {
+  getAccessToken(code) {
     const parameters = {
       client_id: this.clientId,
       client_secret: this.clientSecret,
@@ -80,7 +73,7 @@ class Twitch{
   /**********************************************************************/
 
   getAuthenticatedUserChannel(accessToken) {
-    return this._executeRequest({
+    return this.executeRequest({
       method: 'GET',
       path: '/channel',
       accessToken: accessToken
@@ -88,7 +81,7 @@ class Twitch{
   }
 
   getStreams(parameters) {
-    return this._executeRequest({
+    return this.executeRequest({
         method: 'GET',
         path: '/streams'
       },
@@ -97,4 +90,4 @@ class Twitch{
   }
 }
 
-export default Twitch;
+module.exports = Twitch;

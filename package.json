@@ -7,6 +7,7 @@
     "build": "webpack --config ./webpack.build.config.js",
     "build:dev": "webpack --config ./webpack.dev.config.js",
     "clean": "rimraf dist/*",
+    "test": "./node_modules/mocha/bin/mocha",
     "prepublish": "npm run clean && npm run build"
   },
   "repository": {
@@ -34,11 +35,12 @@
     "eslint-plugin-jsx-a11y": "2.2.3",
     "eslint-plugin-react": "6.4.1",
     "json-loader": "^0.5.4",
+    "mocha": "^3.2.0",
     "path-to-regexp": "^1.7.0",
-    "rimraf": "^2.5.1",
-    "webpack": "1.14.0",
     "request": "^2.79.0",
-    "request-promise": "^4.1.1"
+    "request-promise": "^4.1.1",
+    "rimraf": "^2.5.1",
+    "webpack": "1.14.0"
   },
   "babel": {
     "presets": [
