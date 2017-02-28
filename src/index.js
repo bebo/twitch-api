@@ -12,7 +12,7 @@ class Twitch{
     this.scopes = scopes;
   }
 
-  static createRequest({method = 'GET', path = '', accessToken, body = {}}, params){
+  static createRequest({method = 'GET', path = '', accessToken, body = {}}, params) {
     return {
       method,
       body,
@@ -27,12 +27,12 @@ class Twitch{
     };
   }
 
-  static executeRequest(options, params){
+  static executeRequest(options, params) {
     const req = this.createRequest(options, params);
     return request(req)
   }
 
-  static getAuthorizationUrl = function(){
+  static getAuthorizationUrl() {
     let scopesParam = '';
     for (let i = 0; i < this.scopes.length;  i++){
       scopesParam += this.scopes[i];
@@ -41,9 +41,9 @@ class Twitch{
       }
     }
     return `${baseUrl}${authorizePath}?response_type=code&client_id=${this.clientId}&redirect_uri=${this.redirectUri}&scope=${scopesParam}`;
-  };
+  }
 
-  static getAccessToken = function(code){
+  static getAccessToken = function(code) {
     const parameters = {
       client_id: this.clientId,
       client_secret: this.clientSecret,
@@ -52,25 +52,49 @@ class Twitch{
       code
     };
 
-    return this.executeRequest(
-      {
+    return this.executeRequest({
         method: 'POST',
         path: accessTokenPath,
       },
       parameters
     );
-  };
-
-
-  /**********************************************************************/
-  /************************* USER SPECIFIC METHODS *************************/
-  /**********************************************************************/
-
-  getUsersLogin(usernames = []){
-    if(!usernames || !usernames.length){return;}
-    return this.executeRequest({path: 'users'}, {login: usernames.join()});
   }
 
+
+  /**********************************************************************/
+  /************************ USER SPECIFIC METHODS ***********************/
+  /**********************************************************************/
+
+  getUsersLogin(usernames = []) {
+    if (!usernames || !usernames.length) { return; }
+    return this.executeRequest({
+      method: 'GET',
+      path: '/users'
+    }, {
+      login: usernames.join()
+    });
+  }
+
+  /**********************************************************************/
+  /******************** CHANNELS SPECIFIC METHODS ***********************/
+  /**********************************************************************/
+
+  getAuthenticatedUserChannel(accessToken) {
+    return this._executeRequest({
+      method: 'GET',
+      path: '/channel',
+      accessToken: accessToken
+    });
+  }
+
+  getStreams(parameters) {
+    return this._executeRequest({
+        method: 'GET',
+        path: '/streams'
+      },
+      parameters
+    );
+  }
 }
 
 export default Twitch;
