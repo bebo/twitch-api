@@ -1,4 +1,4 @@
-import request from 'request-promise';
+const request = require('request-promise');
 
 const baseUrl = 'https://api.twitch.tv/kraken';
 const authorizePath = '/oauth2/authorize';
