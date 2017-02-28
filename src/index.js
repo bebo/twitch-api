@@ -12,7 +12,7 @@ class Twitch {
     this.scopes = scopes;
   }
 
-  createRequest({method = 'GET', path = '', accessToken, body = {}}, params) {
+  createRequest({method = 'GET', path = '', accessToken, version = 3, body = {}}, params) {
     return {
       method,
       body,
@@ -20,7 +20,7 @@ class Twitch {
       qs: params,
       headers: {
         'Authorization': accessToken ? `OAuth ${accessToken}` : undefined,
-        'Accept': 'Accept: application/vnd.twitchtv.v5+json',
+        'Accept': `Accept: application/vnd.twitchtv.v${version}+json`,
         'Client-ID': this.clientId
       },
       json: true
@@ -62,9 +62,18 @@ class Twitch {
     if (!usernames || !usernames.length) { return; }
     return this.executeRequest({
       method: 'GET',
-      path: '/users'
+      path: '/users',
+      version: 5
     }, {
       login: usernames.join()
+    });
+  }
+
+  getAuthenticatedUser(accessToken) {
+    return this.executeRequest({
+      method: 'GET',
+      path: '/user',
+      accessToken: accessToken
     });
   }
 
