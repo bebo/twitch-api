@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bebo/reconnecting-websocket.git"
+    "url": "git+https://github.com/bebo/twitch-api.git"
   },
   "keywords": [],
   "author": "Jonas Daniels",
