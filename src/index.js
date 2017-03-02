@@ -5,14 +5,15 @@ const authorizePath = '/oauth2/authorize';
 const accessTokenPath = '/oauth2/token';
 
 class Twitch {
-  constructor({clientId, clientSecret, redirectUri, scopes = []}) {
+  constructor({clientId, clientSecret, redirectUri, scopes = [], version = 5}) {
     this.clientId = clientId;
     this.clientSecret = clientSecret;
     this.redirectUri = redirectUri;
+    this.version = version;
     this.scopes = scopes;
   }
 
-  createRequest({method = 'GET', path = '', accessToken, version = 3, body = {}}, params) {
+  createRequest({method = 'GET', path = '', accessToken, body = {}}, params) {
     return {
       method,
       body,
@@ -20,7 +21,7 @@ class Twitch {
       qs: params,
       headers: {
         'Authorization': accessToken ? `OAuth ${accessToken}` : undefined,
-        'Accept': `Accept: application/vnd.twitchtv.v${version}+json`,
+        'Accept': `Accept: application/vnd.twitchtv.v${this.version}+json`,
         'Client-ID': this.clientId
       },
       json: true
@@ -59,11 +60,11 @@ class Twitch {
   /**********************************************************************/
 
   getUsersLogin(usernames = []) {
-    if (!usernames || !usernames.length) { return; }
+    if (!usernames || !usernames.length) { return Promise.reject('array of usernames required'); }
+
     return this.executeRequest({
       method: 'GET',
-      path: '/users',
-      version: 5
+      path: '/users'
     }, {
       login: usernames.join()
     });
