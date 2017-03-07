@@ -23,6 +23,55 @@ describe('TwitchApi', () => {
     })
   })
 
+  describe('getUser()', () => {
+    it('fetch single user: 139658194 (jake_loo)', () => {
+      const expected = {
+        display_name: "jake_loo",
+        _id: "139658194",
+        name: "jake_loo",
+        type: "user"
+      }
+
+      return twitch.getUser("139658194")
+      .then((b) => {
+        const user = b;
+        const expectUser = expected;
+
+        // we only care about couple field is correct
+        assert.strictEqual(user.display_name, expectUser.display_name)
+        assert.strictEqual(user._id, expectUser._id)
+        assert.strictEqual(user.name, expectUser.name)
+        assert.strictEqual(user.type, expectUser.type)
+        return true
+      })
+    })
+
+    it('fetch two user: jake_loo, jake_loo_dev, jake_loo_prod', () => {
+      return twitch.getUsersLogin(['jake_loo', 'jake_loo_dev', 'jake_loo_prod'])
+      .then((b) => {
+        // we only care about couple field is correct
+        assert.strictEqual(b._total, 3)
+        assert.strictEqual(b.users.length, 3)
+        return true
+      })
+    })
+
+    it('fetch an invalid user', () => {
+      // Twitch doesn't allow query with invalid character nor 1 character login name, so test it with UUID
+      return twitch.getUsersLogin(['e331a9f237fc480d968c87af6c6ed552']) 
+        .then((b) => assert.strictEqual(b._total, 0))
+    })
+
+    it('fetch an invalid and a valid user', () => {
+      // Twitch doesn't allow query with invalid character nor 1 character login name, so test it with UUID
+      return twitch.getUsersLogin(['e331a9f237fc480d968c87af6c6ed552', 'jake_loo']) 
+      .then((b) => {
+        assert.strictEqual(b._total, 1)
+        assert.strictEqual(b.users.length, 1)
+      })
+    })
+  })
+
   describe('getUsersLogin()', () => {
     it('fetch single user: jake_loo', () => {
       const expected = {  

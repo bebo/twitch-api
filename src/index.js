@@ -58,6 +58,14 @@ class Twitch {
   /**********************************************************************/
   /************************ USER SPECIFIC METHODS ***********************/
   /**********************************************************************/
+  getUser(user_id) {
+    if (!user_id) { return Promise.reject('user_id is required'); }
+
+    return this.executeRequest({
+      method: 'GET',
+      path: `/users/${user_id}`
+    });
+  }
 
   getUsersLogin(usernames = []) {
     if (!usernames || !usernames.length) { return Promise.reject('array of usernames required'); }
