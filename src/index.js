@@ -21,7 +21,7 @@ class Twitch {
       qs: params,
       headers: {
         'Authorization': accessToken ? `OAuth ${accessToken}` : undefined,
-        'Accept': `Accept: application/vnd.twitchtv.v${this.version}+json`,
+        'Accept': `application/vnd.twitchtv.v${this.version}+json`,
         'Client-ID': this.clientId
       },
       json: true
