@@ -33,8 +33,9 @@ class Twitch {
     return request(req)
   }
 
-  getAuthorizationUrl() {
-    return `${baseUrl}${authorizePath}?response_type=code&client_id=${this.clientId}&redirect_uri=${this.redirectUri}&scope=${this.scopes.join('+')}`;
+  getAuthorizationUrl(scopes) {
+    if (!scopes) scopes = this.scopes;
+    return `${baseUrl}${authorizePath}?response_type=code&client_id=${this.clientId}&redirect_uri=${this.redirectUri}&scope=${scopes.join('+')}`;
   }
 
   getAccessToken(code) {
@@ -102,6 +103,15 @@ class Twitch {
     return this.executeRequest({
         method: 'GET',
         path: '/streams'
+      },
+      parameters
+    );
+  }
+
+  getChannelFollowers(channelId, parameters) {
+    return this.executeRequest({
+        method: 'GET',
+        path: `/channels/${channelId}/follows`
       },
       parameters
     );
