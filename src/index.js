@@ -3,6 +3,7 @@ const request = require('request-promise');
 const baseUrl = 'https://api.twitch.tv/kraken';
 const authorizePath = '/oauth2/authorize';
 const accessTokenPath = '/oauth2/token';
+const timeout = 30 * 1000; //30 second timeout
 
 class Twitch {
   constructor({clientId, clientSecret, redirectUri, scopes = [], version = 5}) {
@@ -19,6 +20,7 @@ class Twitch {
       body,
       url: baseUrl + path,
       qs: params,
+      timeout,
       headers: {
         'Authorization': accessToken ? `OAuth ${accessToken}` : undefined,
         'Accept': `application/vnd.twitchtv.v${this.version}+json`,
