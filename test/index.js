@@ -72,6 +72,24 @@ describe('TwitchApi', () => {
     })
   })
 
+  describe('getChannel()', () => {
+    it('fetch channel: theonlyjohnny_jd_', () => {
+      let social_id = '';
+      return twitch.getUsersLogin(['theonlyjohnny_jd_'])
+      .then(({users})=> {
+        const user = users[0];
+        social_id = user._id;
+        return twitch.getChannel(social_id);
+      })
+      .then(chan => {
+        assert.equal(chan.display_name, 'theonlyjohnny_jd_');
+        assert.equal(typeof chan.status, 'string');
+        assert.equal(typeof chan.game, 'string');
+        assert.equal(chan._id, social_id);
+      })
+    })
+  })
+
   describe('getUsersLogin()', () => {
     it('fetch single user: jake_loo', () => {
       const expected = {  

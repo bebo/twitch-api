@@ -118,6 +118,14 @@ class Twitch {
       parameters
     );
   }
+
+  getChannel(channelId) {
+    return this.executeRequest({
+      method: 'GET',
+      path: `/channels/${channelId}`,
+    },
+    {});
+  }
 }
 
 module.exports = Twitch;
