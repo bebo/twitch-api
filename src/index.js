@@ -32,7 +32,7 @@ class Twitch {
 
   executeRequest(options, params) {
     const req = this.createRequest(options, params);
-    return request(req)
+    return request(req);
   }
 
   getAuthorizationUrl(scopes) {
@@ -125,6 +125,26 @@ class Twitch {
       path: `/channels/${channelId}`,
     },
     {});
+  }
+
+  updateChannel(channelId, attempt, accessToken) {
+    const { status, game, delay } = attempt;
+    const update = {};
+    if (status) {
+      update.status = status;
+    }
+    if (game) {
+      update.game = game;
+    }
+    if ('delay' in attempt) {
+      update.delay = delay;
+    }
+    return this.executeRequest({
+      method: 'PUT',
+      body: { channel:  update },
+      path: `/channels/${channelId}`,
+      accessToken
+    }, {});
   }
 }
 

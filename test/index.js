@@ -3,7 +3,7 @@ const process = require('process')
 const TwitchApi = require('../src/index.js')
 
 describe('TwitchApi', () => {
-  const scopes = ['user_read', 'channel_read', 'chat_login', 'channel_feed_edit'];
+  const scopes = ['user_read', 'channel_read', 'chat_login', 'channel_feed_edit', 'channel_editor'];
   const clientId = process.env.TWITCH_CLIENT_ID
   const clientSecret = process.env.TWITCH_CLIENT_SECRET
   const redirectUri = 'https://example.com'
@@ -87,6 +87,34 @@ describe('TwitchApi', () => {
         assert.equal(typeof chan.game, 'string');
         assert.equal(chan._id, social_id);
       })
+    })
+  });
+  
+  describe('updateChannel()', () => {
+    let channel = {};
+    it('fetch channel: theonlyjohnny_jd_', () => {
+      let social_id = '';
+      return twitch.getUsersLogin(['theonlyjohnny_jd_'])
+      .then(({users})=> {
+        const user = users[0];
+        social_id = user._id;
+        return twitch.getChannel(social_id);
+      })
+      .then(chan => {
+        assert.equal(chan.display_name, 'theonlyjohnny_jd_');
+        assert.equal(typeof chan.status, 'string');
+        assert.equal(typeof chan.game, 'string');
+        assert.equal(chan._id, social_id);
+        channel = chan;
+      })
+    })
+
+    it('update channel: theonlyjohnny_jd_', () => {
+      const update = { status: `twitch-api test @${Date.now()}` }
+      return twitch.updateChannel(channel._id, update, 'mdpdqkgkcnngpthzifjd9g90rw9ind')
+        .then(res => {
+          assert.equal(update.status, res.status);
+        });
     })
   })
 
