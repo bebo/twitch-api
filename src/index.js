@@ -119,6 +119,26 @@ class Twitch {
     );
   }
 
+  getChannelSubscriptions(channelId, accessToken, params) {
+    if (this.version > 3) return Promise.reject("TwitchAPI:getChannelSubscriptions is only support on twitch api v3 and below");
+    return this.executeRequest({
+        method: 'GET',
+        path: `/channels/${channelId}/subscriptions`,
+        accessToken
+      },
+      params
+    ).then(data => {
+      if (data && data.subscriptions) {
+        return data.subscriptions;
+      }
+      return [];
+    })
+    .catch(err => {
+      if (err && err.statusCode === 422) return Promise.resolve([]);
+      throw err;
+    });
+  }
+
   getChannel(channelId) {
     return this.executeRequest({
       method: 'GET',
@@ -146,6 +166,8 @@ class Twitch {
       accessToken
     }, {});
   }
+
+
 }
 
 module.exports = Twitch;

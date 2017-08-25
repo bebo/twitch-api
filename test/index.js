@@ -3,16 +3,24 @@ const process = require('process')
 const TwitchApi = require('../src/index.js')
 
 describe('TwitchApi', () => {
-  const scopes = ['user_read', 'channel_read', 'chat_login', 'channel_feed_edit', 'channel_editor'];
+  const scopes = ['user_read', 'channel_read', 'chat_login', 'channel_feed_edit', 'channel_subscriptions', 'channel_editor'];
   const clientId = process.env.TWITCH_CLIENT_ID
   const clientSecret = process.env.TWITCH_CLIENT_SECRET
   const redirectUri = 'https://example.com'
+  const accessToken = process.env.ACCESS_TOKEN;
 
   const twitch = new TwitchApi({
     clientId,
     clientSecret,
     redirectUri,
     scopes
+  });
+  const oldTwitch = new TwitchApi({
+    clientId,
+    clientSecret,
+    redirectUri,
+    scopes,
+    version: 3
   })
 
   describe('getAuthorizationUrl()', () => {
@@ -111,11 +119,16 @@ describe('TwitchApi', () => {
 
     it('update channel: theonlyjohnny_jd_', () => {
       const update = { status: `twitch-api test @${Date.now()}` }
-      return twitch.updateChannel(channel._id, update, 'mdpdqkgkcnngpthzifjd9g90rw9ind')
+      return twitch.updateChannel(channel._id, update, accessToken)
         .then(res => {
           assert.equal(update.status, res.status);
         });
     })
+  })
+
+  it('fetch subscriptions list: theonlyjohnny_jd_', () => {
+    return oldTwitch.getChannelSubscriptions('theonlyjohnny_jd_', accessToken, { limit: 50 });
+    /* idk what asserts to do here tbh lol */
   })
 
   describe('getUsersLogin()', () => {
