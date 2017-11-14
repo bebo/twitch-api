@@ -12,6 +12,12 @@ class Twitch {
     this.redirectUri = redirectUri;
     this.version = version;
     this.scopes = scopes;
+    if (this.version <= 5) {
+      const expires = new Date(1546243200000);
+      /* Mon Dec 31 2018 00:00:00 */
+      const diff = new Date() - expires;
+      console.warn(`Twitch API v${this.version} is deprecated and will be removed in ${expires - Date.now()}`);
+    }
   }
 
   createRequest({method = 'GET', path = '', accessToken, body = {}}, params) {
@@ -166,7 +172,17 @@ class Twitch {
       accessToken
     }, {});
   }
+  /**********************************************************************/
+  /**************************GAMES***************************************/
+  /**********************************************************************/
 
+  getGames(count = 20, offset = 0) {
+    if (this.version > 3) return Promise.reject("TwitchAPI:getChannelSubscriptions is only support on twitch api v3 and below");
+    return this.executeRequest({
+      method: 'GET',
+      path: `/games/top?limit=${count}&offset=${offset}`
+    });
+  }
 
 }
 

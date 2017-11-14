@@ -23,6 +23,17 @@ describe('TwitchApi', () => {
     version: 3
   })
 
+
+  describe('getGames()', () => {
+    it('get games', () => {
+      oldTwitch.getGames()
+        .then(games => {
+          assert.equal(typeof games._total, 'number');
+          assert.equal(Array.isArray(games.top), true);
+        });
+    })
+  });
+
   describe('getAuthorizationUrl()', () => {
     it('match url', () => {
       const url = twitch.getAuthorizationUrl()
@@ -66,13 +77,13 @@ describe('TwitchApi', () => {
 
     it('fetch an invalid user', () => {
       // Twitch doesn't allow query with invalid character nor 1 character login name, so test it with UUID
-      return twitch.getUsersLogin(['e331a9f237fc480d968c87af6c6ed552']) 
+      return twitch.getUsersLogin(['e331a9f237fc480d968c87af6c6ed552'])
         .then((b) => assert.strictEqual(b._total, 0))
     })
 
     it('fetch an invalid and a valid user', () => {
       // Twitch doesn't allow query with invalid character nor 1 character login name, so test it with UUID
-      return twitch.getUsersLogin(['e331a9f237fc480d968c87af6c6ed552', 'jake_loo']) 
+      return twitch.getUsersLogin(['e331a9f237fc480d968c87af6c6ed552', 'jake_loo'])
       .then((b) => {
         assert.strictEqual(b._total, 1)
         assert.strictEqual(b.users.length, 1)
@@ -97,7 +108,7 @@ describe('TwitchApi', () => {
       })
     })
   });
-  
+
   describe('updateChannel()', () => {
     let channel = {};
     it('fetch channel: theonlyjohnny_jd_', () => {
@@ -128,15 +139,15 @@ describe('TwitchApi', () => {
 
   it('fetch subscriptions list: theonlyjohnny_jd_', () => {
     return oldTwitch.getChannelSubscriptions('theonlyjohnny_jd_', accessToken, { limit: 50 });
-    /* idk what asserts to do here tbh lol */
+     /* idk what asserts to do here tbh lol  */
   })
 
   describe('getUsersLogin()', () => {
     it('fetch single user: jake_loo', () => {
-      const expected = {  
+      const expected = {
         _total: 1,
-        users:[  
-          {  
+        users:[
+          {
             display_name: "jake_loo",
             _id: "139658194",
             name: "jake_loo",
@@ -174,17 +185,19 @@ describe('TwitchApi', () => {
 
     it('fetch an invalid user', () => {
       // Twitch doesn't allow query with invalid character nor 1 character login name, so test it with UUID
-      return twitch.getUsersLogin(['e331a9f237fc480d968c87af6c6ed552']) 
+      return twitch.getUsersLogin(['e331a9f237fc480d968c87af6c6ed552'])
         .then((b) => assert.strictEqual(b._total, 0))
     })
 
     it('fetch an invalid and a valid user', () => {
       // Twitch doesn't allow query with invalid character nor 1 character login name, so test it with UUID
-      return twitch.getUsersLogin(['e331a9f237fc480d968c87af6c6ed552', 'jake_loo']) 
+      return twitch.getUsersLogin(['e331a9f237fc480d968c87af6c6ed552', 'jake_loo'])
       .then((b) => {
         assert.strictEqual(b._total, 1)
         assert.strictEqual(b.users.length, 1)
       })
     })
   })
+
 })
+
