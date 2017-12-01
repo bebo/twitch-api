@@ -137,10 +137,13 @@ describe('TwitchApi', () => {
     })
   })
 
-  it('fetch subscriptions list: theonlyjohnny_jd_', () => {
-    return oldTwitch.getChannelSubscriptions('theonlyjohnny_jd_', accessToken, { limit: 50 });
-     /* idk what asserts to do here tbh lol  */
-  })
+
+  describe('getChannelSubscriptions', () => {
+    it('fetch subscriptions list: theonlyjohnny_jd_', () => {
+      return oldTwitch.getChannelSubscriptions('theonlyjohnny_jd_', accessToken, { limit: 50 });
+       /* idk what asserts to do here tbh lol  */
+    });
+  });
 
   describe('getUsersLogin()', () => {
     it('fetch single user: jake_loo', () => {
@@ -198,6 +201,20 @@ describe('TwitchApi', () => {
       })
     })
   })
+
+  describe('checkAuthStatus', () => {
+    it('fetches', () => twitch.checkAuthStatus(accessToken));
+    it('is well formed', () => twitch.checkAuthStatus(accessToken)
+      .then(response => {
+        assert.equal(Boolean(response && response.token), true);
+      })
+    );
+
+    it('is valid auth', () => twitch.checkAuthStatus(accessToken)
+      .then(response => response.token)
+      .then(token => assert.strictEqual(token.valid, true))
+    );
+  });
 
 })
 

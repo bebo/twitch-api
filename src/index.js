@@ -63,10 +63,17 @@ class Twitch {
     );
   }
 
-
   /**********************************************************************/
   /************************ USER SPECIFIC METHODS ***********************/
   /**********************************************************************/
+
+  checkAuthStatus(accessToken) {
+    return this.executeRequest({
+      method: 'GET',
+      accessToken
+    });
+  }
+
   getUser(user_id) {
     if (!user_id) { return Promise.reject('user_id is required'); }
 
