@@ -133,7 +133,6 @@ class Twitch {
   }
 
   getChannelSubscriptions(channelId, accessToken, params) {
-    if (this.version > 3) return Promise.reject("TwitchAPI:getChannelSubscriptions is only support on twitch api v3 and below");
     return this.executeRequest({
         method: 'GET',
         path: `/channels/${channelId}/subscriptions`,
