@@ -1,6 +1,6 @@
 const request = require('request-promise');
 
-const baseUrl = 'https://api.twitch.tv/kraken';
+const _baseUrl = 'https://api.twitch.tv/kraken';
 const authUrl = 'https://id.twitch.tv';
 const authorizePath = '/oauth2/authorize';
 const accessTokenPath = '/oauth2/token';
@@ -21,11 +21,11 @@ class Twitch {
     }
   }
 
-  createRequest({method = 'GET', path = '', accessToken, body = {}, _baseUrl = baseUrl}, params) {
+  createRequest({method = 'GET', path = '', accessToken, body = {}, baseUrl = _baseUrl }, params) {
     const req = {
       method,
       body,
-      url: _baseUrl + path,
+      url: baseUrl + path,
       qs: params,
       timeout,
       headers: {
