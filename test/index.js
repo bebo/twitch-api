@@ -37,7 +37,7 @@ describe('TwitchApi', () => {
   describe('getAuthorizationUrl()', () => {
     it('match url', () => {
       const url = twitch.getAuthorizationUrl()
-      const expected = `https://api.twitch.tv/kraken/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join('+')}`
+      const expected = `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join('+')}`
       return assert.strictEqual(url, expected)
     })
   })

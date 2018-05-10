@@ -1,6 +1,7 @@
 const request = require('request-promise');
 
 const baseUrl = 'https://api.twitch.tv/kraken';
+const authUrl = 'https://id.twitch.tv';
 const authorizePath = '/oauth2/authorize';
 const accessTokenPath = '/oauth2/token';
 const timeout = 30 * 1000; //30 second timeout
@@ -20,20 +21,25 @@ class Twitch {
     }
   }
 
-  createRequest({method = 'GET', path = '', accessToken, body = {}}, params) {
-    return {
+  createRequest({method = 'GET', path = '', accessToken, body = {}, _baseUrl = baseUrl}, params) {
+    const req = {
       method,
       body,
-      url: baseUrl + path,
+      url: _baseUrl + path,
       qs: params,
       timeout,
       headers: {
-        'Authorization': accessToken ? `OAuth ${accessToken}` : undefined,
         'Accept': `application/vnd.twitchtv.v${this.version}+json`,
         'Client-ID': this.clientId
       },
       json: true
     };
+
+    if (accessToken) {
+        req.headers.Authorization = `OAuth ${accessToken}`;
+    }
+
+    return req;
   }
 
   executeRequest(options, params) {
@@ -43,7 +49,7 @@ class Twitch {
 
   getAuthorizationUrl(scopes) {
     if (!scopes) scopes = this.scopes;
-    return `${baseUrl}${authorizePath}?response_type=code&client_id=${this.clientId}&redirect_uri=${this.redirectUri}&scope=${scopes.join('+')}`;
+    return `${authUrl}${authorizePath}?response_type=code&client_id=${this.clientId}&redirect_uri=${this.redirectUri}&scope=${scopes.join('+')}`;
   }
 
   getAccessToken(code) {
@@ -58,6 +64,7 @@ class Twitch {
     return this.executeRequest({
         method: 'POST',
         path: accessTokenPath,
+        baseUrl: authUrl
       },
       parameters
     );
